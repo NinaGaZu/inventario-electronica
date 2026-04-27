@@ -4,13 +4,13 @@ public class Producto {
     private String codigo;
     private String descripcion;
     private int cantidad;
-    private int precio;
+    private double precio;
     private String ubicacion;
 
     public Producto() {
     }
 
-    public Producto(String codigo, String descripcion, int cantidad, int precio, String ubicacion) {
+    public Producto(String codigo, String descripcion, int cantidad, double precio, String ubicacion) {
         this.codigo = codigo;
         this.descripcion = descripcion;
         this.cantidad = cantidad;
