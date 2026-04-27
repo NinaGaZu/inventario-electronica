@@ -1,7 +1,7 @@
 package inventario.modelo;
 
 public class Producto {
-    private String codigo;
+    private String codigo; //Identificador único (URL: /api/productos/{codigo})
     private String descripcion;
     private int cantidad;
     private double precio;
