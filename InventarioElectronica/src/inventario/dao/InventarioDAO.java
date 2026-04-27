@@ -22,13 +22,13 @@ public class InventarioDAO {
     }
 
     private void inicializarDatos() {
-        productos.add(new Producto("P001", "Laptop Dell Inspiron", 10, 850.00, "Almacén A1"));
-        productos.add(new Producto("P002", "Mouse Logitech", 50, 25.00, "Almacén B2"));
-        productos.add(new Producto("P003", "Teclado Mecánico", 30, 75.00, "Almacén B3"));
-        productos.add(new Producto("P004", "Monitor Samsung 24\"", 15, 250.00, "Almacén C1"));
+        productos.add(new Producto("P001", "Laptop Dell Inspiron", 10, 428000, "Almacén A1"));
+        productos.add(new Producto("P002", "Mouse Logitech", 50, 14990, "Almacén B2"));
+        productos.add(new Producto("P003", "Teclado Mecánico", 30, 72000, "Almacén B3"));
+        productos.add(new Producto("P004", "Monitor Samsung 24\"", 15, 105990, "Almacén C1"));
         
-        clientes.add(new Cliente("Juan Pérez", "Av. Principal 123", "juan@email.com", "987654321"));
-        clientes.add(new Cliente("María González", "Calle Secundaria 456", "maria@email.com", "912345678"));
+        clientes.add(new Cliente("Juan Pérez", "Av. Principal 123", "juan123@gmail.com", "987654321"));
+        clientes.add(new Cliente("María González", "Calle Secundaria 456", "maria456@gmail.com", "912345678"));
         
         proveedores.add(new Proveedor("TechSupply SA", "Av. Industrial 789", "contacto@techsupply.com", "223344556"));
     }
@@ -78,7 +78,7 @@ public class InventarioDAO {
         return true;
     }
 
-    public Venta registrarVenta(Producto producto, Cliente cliente, int cantidad, String tipoCompra) {
+    public Venta registrarVenta(Producto producto, Cliente cliente,int cantidad, String tipoCompra) {
         // Validar disponibilidad de stock
         if (producto.getCantidad() >= cantidad) {
             // Actualizar inventario

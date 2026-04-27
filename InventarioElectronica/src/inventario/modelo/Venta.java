@@ -32,7 +32,7 @@ public class Venta {
         double subtotal = cantidad * precioUnitario;
         
         // Aplicar 15% de descuento si es compra en línea y mayor a 3 productos
-        if (tipoCompra.equalsIgnoreCase("linea") && cantidad > 3) {
+        if (tipoCompra != null && tipoCompra.equalsIgnoreCase("linea") && cantidad > 3) {
             double descuento = subtotal * 0.15;
             this.total = subtotal - descuento;
         } else {
