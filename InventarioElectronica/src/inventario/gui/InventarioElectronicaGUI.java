@@ -807,4 +807,4 @@ public class InventarioElectronicaGUI extends JFrame {
             ventana.setVisible(true);
         });
     }
-} // ← Fin de la clase InventarioElectronicaGUI}
+} 
