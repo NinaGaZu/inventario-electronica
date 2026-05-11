@@ -10,6 +10,16 @@ import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
+//Imports para JasperReports
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.view.JasperViewer;
+import java.sql.Connection;
+import java.util.HashMap;
+import java.util.Map;
+
 public class InventarioElectronicaGUI extends JFrame {
     private InventarioDAO inventarioDAO;
     private JTabbedPane tabbedPane;
@@ -643,8 +653,38 @@ public class InventarioElectronicaGUI extends JFrame {
         }
     }
 
-    // Métodos para Reportes
+    // ==================== MÉTODOS PARA REPORTES ====================
+    
+    /**
+     * Método principal para generar reporte de inventario
+     * Ofrece opción de reporte simple (texto) o profesional (JasperReports)
+     */
     private void generarReporteInventario() {
+        // Opción para elegir tipo de reporte
+        String[] opciones = {"Reporte Simple (Texto)", "Reporte Profesional (PDF con JasperReports)"};
+        
+        int opcion = JOptionPane.showOptionDialog(
+            this, 
+            "Seleccione el tipo de reporte:", 
+            "Generar Reporte",
+            JOptionPane.DEFAULT_OPTION, 
+            JOptionPane.QUESTION_MESSAGE,
+            null, 
+            opciones, 
+            opciones[0]
+        );
+        
+        if (opcion == 0) {
+            generarReporteTexto(); // Reporte en texto plano
+        } else {
+            generarReporteJasper(); // Reporte con JasperReports
+        }
+    }
+
+    /**
+     * Método auxiliar: Genera reporte en texto plano (tu implementación original)
+     */
+    private void generarReporteTexto() {
         StringBuilder reporte = new StringBuilder();
         reporte.append("========================================\n");
         reporte.append("   REPORTE DE INVENTARIO\n");
@@ -700,6 +740,66 @@ public class InventarioElectronicaGUI extends JFrame {
         txtReporteInventario.setText(reporte.toString());
     }
 
+    /**
+     * Método nuevo: Genera reporte profesional con JasperReports (PDF)
+     * REQUISITOS: 
+     * 1. Librerías JasperReports en Build Path
+     * 2. Archivo ReporteInventario.jasper en src/reports/
+     * 3. Método obtenerConexion() público en InventarioDAO
+     */
+    private void generarReporteJasper() {
+        try {
+            // Ruta al archivo .jasper compilado (dentro de src/reports/)
+            String rutaReporte = "src/reports/ReporteInventario.jasper";
+            
+            // Parámetros del reporte
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("tituloReporte", "Inventario - Tienda de Electrónicos");
+            parametros.put("fechaGeneracion", new SimpleDateFormat("dd/MM/yyyy").format(new java.util.Date()));
+            
+            // Obtener conexión desde el DAO (debes agregar este método público en InventarioDAO)
+            Connection conexion = inventarioDAO.obtenerConexion();
+            
+            if (conexion == null) {
+                throw new Exception("No hay conexión activa a la base de datos");
+            }
+            
+            // Llenar y generar el reporte
+            JasperPrint jasperPrint = JasperFillManager.fillReport(rutaReporte, parametros, conexion);
+            
+            // Exportar a PDF
+            String rutaPDF = "reportes/Inventario_" + System.currentTimeMillis() + ".pdf";
+            JasperExportManager.exportReportToPdfFile(jasperPrint, rutaPDF);
+            
+            // Mostrar el reporte en ventana
+            JasperViewer.viewReport(jasperPrint, false);
+            
+            JOptionPane.showMessageDialog(this, 
+                "✓ Reporte generado exitosamente:\n" + rutaPDF, 
+                "Éxito", 
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            // Cerrar conexión (opcional, si el DAO la gestiona)
+            // conexion.close();
+            
+        } catch (net.sf.jasperreports.engine.JRException e) {
+            JOptionPane.showMessageDialog(this, 
+                "✗ Error de JasperReports:\n" + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "✗ Error al generar el reporte:\n" + e.getMessage(), 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Método principal para ejecutar la aplicación
+     */
     public static void main(String[] args) {
         // Ejecutar en el hilo de despacho de eventos de Swing
         SwingUtilities.invokeLater(() -> {
@@ -707,4 +807,4 @@ public class InventarioElectronicaGUI extends JFrame {
             ventana.setVisible(true);
         });
     }
-}
+} // ← Fin de la clase InventarioElectronicaGUI}
